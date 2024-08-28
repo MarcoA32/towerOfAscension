@@ -1,0 +1,169 @@
+[gd_scene load_steps=17 format=3 uid="uid://bs4mo4oosdtt3"]
+
+[ext_resource type="Texture2D" uid="uid://d1bmhxdeftyox" path="res://frontGoblin.aseprite" id="1_vsj8a"]
+[ext_resource type="Texture2D" uid="uid://cgia7a3wdopoi" path="res://frontGoblin2.aseprite" id="2_0pdqi"]
+[ext_resource type="Texture2D" uid="uid://5qtty8dqvyj8" path="res://frontGoblin3.aseprite" id="3_pcw41"]
+[ext_resource type="Texture2D" uid="uid://cdj2p2284e5pd" path="res://idlegoblin2.aseprite" id="4_hdix7"]
+[ext_resource type="Texture2D" uid="uid://cmtia26h3xsun" path="res://goblinLeft.aseprite" id="4_ldhgq"]
+[ext_resource type="Texture2D" uid="uid://b8puk250cbrd8" path="res://goblinLeft2.aseprite" id="5_ia1n8"]
+[ext_resource type="Texture2D" uid="uid://df56qtppdb5d1" path="res://goblinRight.aseprite" id="6_fb3ij"]
+[ext_resource type="Texture2D" uid="uid://dalftjq1xgr2h" path="res://goblinRight2.aseprite" id="7_flj8h"]
+[ext_resource type="Texture2D" uid="uid://manjm7km78o1" path="res://upGoblin.aseprite" id="8_ws3vu"]
+[ext_resource type="Texture2D" uid="uid://cna7r28brjv6s" path="res://upGoblin2.aseprite" id="9_f3vph"]
+[ext_resource type="Texture2D" uid="uid://7e7q0cbaodof" path="res://upGoblin3.aseprite" id="10_a6af7"]
+
+[sub_resource type="GDScript" id="GDScript_tp8rk"]
+resource_name = "gremlin2d"
+script/source = "extends CharacterBody2D
+
+var gspeed = 1
+var player_chase = false
+var player = null
+
+
+func _physics_process(delta: float) -> void:
+  # Decrease health by 10 (or any other value)
+	if player_chase:
+		position += (player.position - position).normalized() * gspeed
+		var direction = (player.position - position).normalized()
+		if abs(direction.x) > abs(direction.y):
+			if direction.x > 0:
+				$AnimatedSprite2D.play(\"right\")  # Player is to the right
+			else:
+				$AnimatedSprite2D.play(\"left\")  # Player is to the left
+		else:
+			if direction.y > 0:
+				$AnimatedSprite2D.play(\"down\")  # Player is below
+			else:
+				$AnimatedSprite2D.play(\"up\")  # Player is above
+
+	# Move towards the player (optional)
+		move_and_slide()
+	else:
+		$AnimatedSprite2D.play(\"idle\")
+	
+		
+
+func _on_detectionarea_body_entered(body: Node2D) -> void:
+	player = body
+	player_chase = true
+
+
+func _on_detectionarea_body_exited(body: Node2D) -> void:
+	player = null
+	player_chase = false
+	
+	
+
+
+func _on_attack_body_entered(body: Node2D) -> void:
+	pass # Replace with function body.
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_phobo"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_vsj8a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_0pdqi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_pcw41")
+}],
+"loop": true,
+"name": &"down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_vsj8a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_hdix7")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_ldhgq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ia1n8")
+}],
+"loop": true,
+"name": &"left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_fb3ij")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_flj8h")
+}],
+"loop": true,
+"name": &"right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_ws3vu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_f3vph")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_a6af7")
+}],
+"loop": true,
+"name": &"up",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_c6gue"]
+radius = 56.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6ip26"]
+radius = 8.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7b7ku"]
+radius = 8.0
+height = 32.0
+
+[node name="gremlin" type="CharacterBody2D" groups=["Enemies"]]
+collision_layer = 0
+collision_mask = 0
+script = SubResource("GDScript_tp8rk")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_phobo")
+animation = &"idle"
+
+[node name="chase" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="chase"]
+shape = SubResource("CircleShape2D_c6gue")
+
+[node name="Attack" type="Area2D" parent="." groups=["Enemies"]]
+collision_layer = 3
+collision_mask = 3
+
+[node name="gremHitbox" type="CollisionShape2D" parent="Attack"]
+position = Vector2(-1, 0)
+scale = Vector2(1.1, 0.8)
+shape = SubResource("CapsuleShape2D_6ip26")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 0)
+scale = Vector2(1.2, 0.8)
+shape = SubResource("CapsuleShape2D_7b7ku")
+
+[connection signal="body_entered" from="chase" to="." method="_on_detectionarea_body_entered"]
+[connection signal="body_exited" from="chase" to="." method="_on_detectionarea_body_exited"]
+[connection signal="body_entered" from="Attack" to="." method="_on_attack_body_entered"]

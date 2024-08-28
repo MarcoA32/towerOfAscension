@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://b7m8a73pjblrt" path="res://wizardBack2.aseprite" id="11_ujgin"]
 [ext_resource type="Texture2D" uid="uid://bd8u2arvpcwrx" path="res://wizardBack3.aseprite" id="12_6t60i"]
 [ext_resource type="Texture2D" uid="uid://bllmtboy2pn8x" path="res://SNES - SD F-1 Grand Prix JPN - 4 - Great Wall of China Field.png" id="13_ijcex"]
-[ext_resource type="Script" path="res://character_body_2d_2.gd" id="14_6n6p3"]
+[ext_resource type="Script" path="res://goblin.gd" id="14_6n6p3"]
 [ext_resource type="Texture2D" uid="uid://d1bmhxdeftyox" path="res://frontGoblin.aseprite" id="14_wehp6"]
 [ext_resource type="Texture2D" uid="uid://cgia7a3wdopoi" path="res://frontGoblin2.aseprite" id="16_ka8r7"]
 [ext_resource type="Texture2D" uid="uid://5qtty8dqvyj8" path="res://frontGoblin3.aseprite" id="17_rvbwm"]

@@ -27,6 +27,10 @@ window/size/mode=3
 
 enabled=PackedStringArray("res://addons/nklbdev.aseprite_importers/plugin.cfg", "res://addons/sprite_cutter/plugin.cfg")
 
+[global_group]
+
+Enemies=""
+
 [input]
 
 ui_left={
