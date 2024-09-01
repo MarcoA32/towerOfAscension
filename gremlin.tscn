@@ -1,16 +1,16 @@
-[gd_scene load_steps=17 format=3 uid="uid://bs4mo4oosdtt3"]
+[gd_scene load_steps=19 format=3 uid="uid://bs4mo4oosdtt3"]
 
-[ext_resource type="Texture2D" uid="uid://d1bmhxdeftyox" path="res://frontGoblin.aseprite" id="1_vsj8a"]
-[ext_resource type="Texture2D" uid="uid://cgia7a3wdopoi" path="res://frontGoblin2.aseprite" id="2_0pdqi"]
-[ext_resource type="Texture2D" uid="uid://5qtty8dqvyj8" path="res://frontGoblin3.aseprite" id="3_pcw41"]
-[ext_resource type="Texture2D" uid="uid://cdj2p2284e5pd" path="res://idlegoblin2.aseprite" id="4_hdix7"]
-[ext_resource type="Texture2D" uid="uid://cmtia26h3xsun" path="res://goblinLeft.aseprite" id="4_ldhgq"]
-[ext_resource type="Texture2D" uid="uid://b8puk250cbrd8" path="res://goblinLeft2.aseprite" id="5_ia1n8"]
-[ext_resource type="Texture2D" uid="uid://df56qtppdb5d1" path="res://goblinRight.aseprite" id="6_fb3ij"]
-[ext_resource type="Texture2D" uid="uid://dalftjq1xgr2h" path="res://goblinRight2.aseprite" id="7_flj8h"]
-[ext_resource type="Texture2D" uid="uid://manjm7km78o1" path="res://upGoblin.aseprite" id="8_ws3vu"]
-[ext_resource type="Texture2D" uid="uid://cna7r28brjv6s" path="res://upGoblin2.aseprite" id="9_f3vph"]
-[ext_resource type="Texture2D" uid="uid://7e7q0cbaodof" path="res://upGoblin3.aseprite" id="10_a6af7"]
+[ext_resource type="Texture2D" uid="uid://bdu8gp2ofrx08" path="res://frontGoblin.png" id="1_uhuil"]
+[ext_resource type="Texture2D" uid="uid://bx3ye4wlk67ud" path="res://frontGoblin2.png" id="2_nntyd"]
+[ext_resource type="Texture2D" uid="uid://c0umcwy8ipysq" path="res://frontGoblin3.png" id="3_git4l"]
+[ext_resource type="Texture2D" uid="uid://bhykwvn15sqrg" path="res://idlegoblin2.png" id="4_smyei"]
+[ext_resource type="Texture2D" uid="uid://c5aqpqida145r" path="res://goblinLeft.png" id="5_sdiqb"]
+[ext_resource type="Texture2D" uid="uid://sci5nlq32bt8" path="res://goblinLeft2.png" id="6_re23x"]
+[ext_resource type="Texture2D" uid="uid://0w5m7uh8mtsg" path="res://goblinRight.png" id="7_7xi7k"]
+[ext_resource type="Texture2D" uid="uid://boud4m3j1j5x0" path="res://goblinRight2.png" id="8_cn07j"]
+[ext_resource type="Texture2D" uid="uid://dap7dxx0ajuff" path="res://upGoblin.png" id="9_cmwn3"]
+[ext_resource type="Texture2D" uid="uid://8xv7nnmudb33" path="res://upGoblin2.png" id="10_yfow3"]
+[ext_resource type="Texture2D" uid="uid://babdajkt16snc" path="res://upGoblin3.png" id="11_eo1oi"]
 
 [sub_resource type="GDScript" id="GDScript_tp8rk"]
 resource_name = "gremlin2d"
@@ -19,9 +19,10 @@ script/source = "extends CharacterBody2D
 var gspeed = 1
 var player_chase = false
 var player = null
+var currentHealth: int = 10
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
   # Decrease health by 10 (or any other value)
 	if player_chase:
 		position += (player.position - position).normalized() * gspeed
@@ -49,7 +50,7 @@ func _on_detectionarea_body_entered(body: Node2D) -> void:
 	player_chase = true
 
 
-func _on_detectionarea_body_exited(body: Node2D) -> void:
+func _on_detectionarea_body_exited(_body: Node2D) -> void:
 	player = null
 	player_chase = false
 	
@@ -57,20 +58,30 @@ func _on_detectionarea_body_exited(body: Node2D) -> void:
 
 
 func _on_attack_body_entered(body: Node2D) -> void:
-	pass # Replace with function body.
+	print('entered body')
+	if body.is_in_group(\"Projectiles\"): 
+		print('its projectile')
+		take_damage(5)
+
+func take_damage(attack: int):
+	currentHealth -= attack
+	$Label.text = str(currentHealth) + \"hp\"
+	if self.currentHealth <=0:
+		queue_free() # Replace with function body.
+	
 "
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_phobo"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_vsj8a")
+"texture": ExtResource("1_uhuil")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_0pdqi")
+"texture": ExtResource("2_nntyd")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_pcw41")
+"texture": ExtResource("3_git4l")
 }],
 "loop": true,
 "name": &"down",
@@ -78,10 +89,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_vsj8a")
+"texture": ExtResource("1_uhuil")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_hdix7")
+"texture": ExtResource("4_smyei")
 }],
 "loop": true,
 "name": &"idle",
@@ -89,10 +100,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_ldhgq")
+"texture": ExtResource("5_sdiqb")
 }, {
 "duration": 1.0,
-"texture": ExtResource("5_ia1n8")
+"texture": ExtResource("6_re23x")
 }],
 "loop": true,
 "name": &"left",
@@ -100,10 +111,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_fb3ij")
+"texture": ExtResource("7_7xi7k")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_flj8h")
+"texture": ExtResource("8_cn07j")
 }],
 "loop": true,
 "name": &"right",
@@ -111,13 +122,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("8_ws3vu")
+"texture": ExtResource("9_cmwn3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_f3vph")
+"texture": ExtResource("10_yfow3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_a6af7")
+"texture": ExtResource("11_eo1oi")
 }],
 "loop": true,
 "name": &"up",
@@ -125,7 +136,7 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c6gue"]
-radius = 56.0
+radius = 88.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6ip26"]
 radius = 8.0
@@ -134,25 +145,33 @@ radius = 8.0
 radius = 8.0
 height = 32.0
 
+[sub_resource type="SystemFont" id="SystemFont_xjath"]
+font_names = PackedStringArray("Gill Sans")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_1px6o"]
+font = SubResource("SystemFont_xjath")
+font_size = 5
+
 [node name="gremlin" type="CharacterBody2D" groups=["Enemies"]]
-collision_layer = 0
-collision_mask = 0
+collision_layer = 2
+collision_mask = 5
 script = SubResource("GDScript_tp8rk")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_phobo")
-animation = &"idle"
+animation = &"up"
 
 [node name="chase" type="Area2D" parent="."]
 collision_layer = 2
-collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="chase"]
 shape = SubResource("CircleShape2D_c6gue")
 
 [node name="Attack" type="Area2D" parent="." groups=["Enemies"]]
-collision_layer = 3
-collision_mask = 3
+collision_layer = 2
+collision_mask = 5
 
 [node name="gremHitbox" type="CollisionShape2D" parent="Attack"]
 position = Vector2(-1, 0)
@@ -161,8 +180,16 @@ shape = SubResource("CapsuleShape2D_6ip26")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, 0)
-scale = Vector2(1.2, 0.8)
+scale = Vector2(0.6, 0.7)
 shape = SubResource("CapsuleShape2D_7b7ku")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -6.0
+offset_top = -15.0
+offset_right = 10.0
+offset_bottom = -6.0
+text = "10hp"
+label_settings = SubResource("LabelSettings_1px6o")
 
 [connection signal="body_entered" from="chase" to="." method="_on_detectionarea_body_entered"]
 [connection signal="body_exited" from="chase" to="." method="_on_detectionarea_body_exited"]
